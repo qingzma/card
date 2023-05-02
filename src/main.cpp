@@ -9,7 +9,7 @@
 
 int main(int argc, char *argv[]) {
   if (argc <= 1) {
-    fprintf(stderr, "Usage: ./example \"SELECT * FROM test;\"\n");
+    fprintf(stderr, "Usage: ./card \"SELECT * FROM test;\"\n");
     return -1;
   }
   std::string query = argv[1];
@@ -27,6 +27,13 @@ int main(int argc, char *argv[]) {
     for (auto i = 0u; i < result.size(); ++i) {
       // Print a statement summary.
       hsql::printStatementInfo(result.getStatement(i));
+      const hsql::SQLStatement *statement = result.getStatement(i);
+
+      if (statement->isType(hsql::kStmtSelect)) {
+        const auto *select =
+            static_cast<const hsql::SelectStatement *>(statement);
+        printf("haha %s", select->fromTable->getName());
+      }
     }
     return 0;
   } else {
