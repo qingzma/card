@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
       if (statement->isType(hsql::kStmtSelect)) {
         const auto *select =
             static_cast<const hsql::SelectStatement *>(statement);
-        // printf("haha %s", select->fromTable->getName());
+        printf("haha %s", select->fromTable->getName());
       }
     }
     return 0;

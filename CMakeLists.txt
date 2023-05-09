@@ -16,3 +16,24 @@ add_executable(card
 
 target_link_libraries(card sqlparser bf)
 target_include_directories(card PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+)
+
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+include(GoogleTest)
+
+add_executable(parser_test test/parser_test.cpp)
+target_link_libraries(parser_test GTest::gtest_main sqlparser bf)
+target_include_directories(parser_test PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
+gtest_discover_tests(parser_test)
+
+add_executable(bloom_filter_test test/bloom_filter_test.cpp)
+target_link_libraries(bloom_filter_test GTest::gtest_main sqlparser bf)
+target_include_directories(bloom_filter_test PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
+gtest_discover_tests(bloom_filter_test)
