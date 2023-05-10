@@ -1,4 +1,5 @@
 #include "../include/catalog.h"
+#include <iostream>
 
 namespace card {
 bool add_database(databases_catalog &databases,
@@ -62,14 +63,17 @@ void serialize_catalog_to_disk(databases_catalog &databases,
 }
 
 cista::byte_buf read_file(const char *filename) {
-  std::ifstream file(filename, std::ios::binary);
-  return cista::byte_buf((std::istreambuf_iterator<char>(file)),
-                         std::istreambuf_iterator<char>());
+  //   std::ifstream file(filename, std::ios::binary);
+  std::ifstream instream(filename, std::ios::in | std::ios::binary);
+  std::vector<uint8_t> data((std::istreambuf_iterator<char>(instream)),
+                            std::istreambuf_iterator<char>());
+  return cista::byte_buf(data);
 }
 
 databases_catalog *deserialize_catalog_from_disk(std::string &db_prefix) {
   std::string catalog_file_path =
       std::filesystem::path(db_prefix) / std::filesystem::path(DB_FILE_NAME);
+  std::cout << catalog_file_path << std::endl;
   cista::byte_buf databases_buffer = read_file(catalog_file_path.c_str());
   databases_catalog *catalog =
       cista::deserialize<databases_catalog>(databases_buffer);
