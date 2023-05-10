@@ -12,19 +12,21 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 include_directories(include)
 
-add_executable(card
-    "src/main.cpp"
-
-    # include/catalog.h
-)
-
-target_link_libraries(card sqlparser bf)
-target_include_directories(card PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
-
+# add_executable(card
+# "src/main.cpp"
+# )
+# target_link_libraries(card sqlparser bf)
+# target_include_directories(card PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
 add_executable(initdb
     src/bin/initdb.cpp)
 target_link_libraries(initdb sqlparser)
 target_include_directories(initdb PRIVATE "/usr/local/include/hsql")
+
+add_executable(csql
+    src/bin/csql.cpp
+)
+target_link_libraries(csql sqlparser bf)
+target_include_directories(csql PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
 
 include(FetchContent)
 FetchContent_Declare(
