@@ -21,6 +21,11 @@ add_executable(card
 target_link_libraries(card sqlparser bf)
 target_include_directories(card PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
 
+add_executable(initdb
+    src/bin/initdb.cpp)
+target_link_libraries(initdb sqlparser)
+target_include_directories(initdb PRIVATE "/usr/local/include/hsql")
+
 include(FetchContent)
 FetchContent_Declare(
     googletest
@@ -41,3 +46,8 @@ add_executable(bloom_filter_test test/bloom_filter_test.cpp)
 target_link_libraries(bloom_filter_test GTest::gtest_main sqlparser bf)
 target_include_directories(bloom_filter_test PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
 gtest_discover_tests(bloom_filter_test)
+
+add_executable(cista_test test/cista_test.cpp)
+target_link_libraries(cista_test GTest::gtest_main sqlparser bf)
+target_include_directories(cista_test PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
+gtest_discover_tests(cista_test)
