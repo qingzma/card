@@ -1,25 +1,29 @@
-// #ifndef CARD_INCLUDE_ENGINE_H_
-// #define CARD_INCLUDE_ENGINE_H_
-// #include "SQLParser.h"
-// #include "catalog.h"
-// #include "util/sqlhelper.h"
+#ifndef CARD_INCLUDE_ENGINE_H_
+#define CARD_INCLUDE_ENGINE_H_
+#include "catalog.h"
+#include "util/sqlhelper.h"
+#include <SQLParser.h>
 
-// namespace card {
-// class Engine {
-// private:
-//   hsql::SQLParserResult parsedResult;
-//   databases_catalog *databases_cat;
+namespace card {
 
-// public:
-//   Engine() = delete;
-//   Engine(const Engine &) = delete;
-//   Engine &operator=(const Engine &) = delete;
-//   Engine(runtime_config &run_config);
+// struct databases_catalog;
+// struct runtime_config;
 
-//   virtual ~Engine();
+class Engine {
+private:
+  hsql::SQLParserResult parsedResult;
+  databases_catalog *databases_cat;
 
-//   void AcceptQuery(std::string query);
-// };
-// } // namespace card
+public:
+  Engine() = delete;
+  Engine(const Engine &) = delete;
+  Engine &operator=(const Engine &) = delete;
+  Engine(runtime_config &run_config);
 
-// #endif // CARD_INCLUDE_ENGINE_H_
+  virtual ~Engine();
+
+  void AcceptQuery(std::string query);
+};
+} // namespace card
+
+#endif // CARD_INCLUDE_ENGINE_H_

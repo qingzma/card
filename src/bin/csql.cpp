@@ -1,6 +1,5 @@
-#include "../../include/catalog.h"
-#include "configuration.h"
-#include <engine.h>
+#include "catalog.h"
+#include "engine.h"
 #include <iostream>
 #include <string.h>
 
@@ -19,7 +18,7 @@ int main(int argc, char **argv) {
     card::runtime_config run_config;
     run_config.prefix = std::string(path);
     // init engine
-    // card::Engine engine(run_config);
+    card::Engine engine(run_config);
 
     // char *EXIT_STR = "exit()";
     bool b_received_query = false;
@@ -41,7 +40,7 @@ int main(int argc, char **argv) {
         query += buffer;
         b_received_query = true;
         // process query here
-        // engine.AcceptQuery(query);
+        engine.AcceptQuery(query);
         // empty query buffer
         query.clear();
       }

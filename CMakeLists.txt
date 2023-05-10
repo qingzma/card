@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9.1)
 
-project(card)
+project(CARD)
 
 add_library(sqlparser SHARED IMPORTED)
 add_library(bf SHARED IMPORTED)
@@ -12,6 +12,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 include_directories(include)
 
+add_library(card STATIC
+    src/catalog.cpp
+    src/engine.cpp)
+target_link_libraries(card sqlparser bf)
+target_include_directories(card PUBLIC "/usr/local/include/hsql" "/usr/local/include/bf")
+
 # add_executable(card
 # "src/main.cpp"
 # )
@@ -19,16 +25,15 @@ include_directories(include)
 # target_include_directories(card PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
 add_executable(initdb
     src/bin/initdb.cpp)
-target_link_libraries(initdb sqlparser)
-target_include_directories(initdb PRIVATE "/usr/local/include/hsql")
+target_link_libraries(initdb card)
 
-add_executable(csql
+# target_include_directories(initdb PRIVATE "/usr/local/include/hsql")
+add_executable(cardql
     src/bin/csql.cpp
-    src/engine.cpp
 )
-target_link_libraries(csql sqlparser bf)
-target_include_directories(csql PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
+target_link_libraries(cardql card)
 
+# target_include_directories(csql PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
 include(FetchContent)
 FetchContent_Declare(
     googletest

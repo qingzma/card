@@ -1,7 +1,8 @@
 #ifndef CARD_CONFIGURATION_H_
 #define CARD_CONFIGURATION_H_
+#include <string>
 namespace card {
-const char *DB_FILE_NAME = "catalog";
+static const char *DB_FILE_NAME = "catalog";
 
 struct runtime_config {
   std::string prefix;
