@@ -10,8 +10,8 @@
 #include <sys/stat.h>
 namespace card {
 
-constexpr auto const SERIALIZATION_MODE = // opt. versioning + check sum
-    cista::mode::WITH_VERSION | cista::mode::WITH_INTEGRITY;
+// constexpr auto const SERIALIZATION_MODE = // opt. versioning + check sum
+//     cista::mode::WITH_VERSION | cista::mode::WITH_INTEGRITY;
 struct column_catalog {
   cista::raw::string column_name;
   hsql::DataType column_type;
@@ -78,10 +78,38 @@ bool create_and_add_table_catalog(database_catalog &database,
       column_catalog col({column_name, column_type, column_loc++});
       table.table_schema.emplace(column_name, col);
     }
+    return true;
   } else {
     // found
     return false;
   }
+}
+
+void serialize_catalog_to_disk(databases_catalog &databases,
+                               std::string &db_prefix) {
+  cista::byte_buf buf = cista::serialize(databases);
+  std::ofstream output;
+
+  std::string catalog_file_path =
+      std::filesystem::path(db_prefix) / std::filesystem::path(DB_FILE_NAME);
+  output.open(catalog_file_path, std::ios::out | std::ios::binary);
+  output << buf;
+  output.close();
+}
+
+cista::byte_buf read_file(const char *filename) {
+  std::ifstream file(filename, std::ios::binary);
+  return cista::byte_buf((std::istreambuf_iterator<char>(file)),
+                         std::istreambuf_iterator<char>());
+}
+
+databases_catalog *deserialize_catalog_from_disk(std::string &db_prefix) {
+  std::string catalog_file_path =
+      std::filesystem::path(db_prefix) / std::filesystem::path(DB_FILE_NAME);
+  cista::byte_buf databases_buffer = read_file(catalog_file_path.c_str());
+  databases_catalog *catalog =
+      cista::deserialize<databases_catalog>(databases_buffer);
+  return catalog;
 }
 
 bool init_db(std::string db_prefix) {
@@ -92,14 +120,9 @@ bool init_db(std::string db_prefix) {
       // ok, continue to init
       printf("Initializing database...\n");
       databases_catalog databases({});
-      cista::byte_buf buf = cista::serialize<SERIALIZATION_MODE>(databases);
-      std::ofstream output;
 
-      std::string catalog_file_path = std::filesystem::path(db_prefix) /
-                                      std::filesystem::path(DB_FILE_NAME);
-      output.open(catalog_file_path);
-      output << buf;
-      output.close();
+      serialize_catalog_to_disk(databases, db_prefix);
+
       printf("Database is initialized.\n");
       return true;
     } else {

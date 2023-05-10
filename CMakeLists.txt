@@ -24,6 +24,7 @@ target_include_directories(initdb PRIVATE "/usr/local/include/hsql")
 
 add_executable(csql
     src/bin/csql.cpp
+    src/engine.cpp
 )
 target_link_libraries(csql sqlparser bf)
 target_include_directories(csql PRIVATE "/usr/local/include/hsql" "/usr/local/include/bf")
